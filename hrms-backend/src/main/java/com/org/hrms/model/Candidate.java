@@ -13,6 +13,8 @@ public class Candidate {
     private String name;
     private String email;
     private String resumeUrl; // Resume Link
+    private String experience; // Added for Job Board
+    private String skills; // Added for Job Board
 
     // Job Link
     private Long jobId;
