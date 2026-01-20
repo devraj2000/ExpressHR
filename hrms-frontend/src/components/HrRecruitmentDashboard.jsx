@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
+import OnboardingSuccess from './OnboardingSuccess';
 
 export default function HrRecruitmentDashboard() {
     const [view, setView] = useState('JOBS'); // JOBS, EXAMS, CANDIDATES
     const [exams, setExams] = useState([]);
     const [candidates, setCandidates] = useState([]);
     const [jobs, setJobs] = useState([]);
+    const [newEmployee, setNewEmployee] = useState(null);
 
     // Exam Form Data
     const [examTitle, setExamTitle] = useState('');
@@ -73,6 +75,16 @@ export default function HrRecruitmentDashboard() {
             } else {
                 alert('No scheduled interview found.');
             }
+        }
+    };
+
+    const handleOnboard = async (candidateId) => {
+        try {
+            const res = await api.post(`/onboarding/convert/${candidateId}`);
+            setNewEmployee(res.data);
+            loadData();
+        } catch (e) {
+            alert('Onboarding failed');
         }
     };
 
@@ -199,12 +211,17 @@ export default function HrRecruitmentDashboard() {
                                     {c.interviewStatus === 'SCHEDULED' && (
                                         <button className="btn" style={{ background: '#10b981', padding: '0.25rem 0.5rem', marginLeft: '0.5rem' }} onClick={() => handleInterviewFeedback(c.id, 'CLEARED')}>Pass Interview</button>
                                     )}
+                                    {(c.bgvStatus === 'OFFER_GENERATED' || c.bgvStatus === 'CLEARED') && (
+                                        <button className="btn" style={{ background: '#8b5cf6', padding: '0.25rem 0.5rem', marginLeft: '0.5rem' }} onClick={() => handleOnboard(c.id)}>Onboard</button>
+                                    )}
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             )}
+
+            {newEmployee && <OnboardingSuccess employee={newEmployee} onClose={() => setNewEmployee(null)} />}
         </div>
     );
 }

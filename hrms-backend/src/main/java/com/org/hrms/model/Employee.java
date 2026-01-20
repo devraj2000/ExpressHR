@@ -15,10 +15,14 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String employeeId; // Special ID e.g. EMP1234
     private String name;
     private String email;
     private String role; // EMPLOYEE, MANAGER, HR
     private String department;
+    private String designation;
+    private java.time.LocalDate joiningDate;
+    private double salary;
     private Long managerId;
 
     // Personal & Bank Details
